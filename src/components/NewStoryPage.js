@@ -11,7 +11,7 @@ export default function NewStoryPage() {
   const history = useHistory();
 
   function onPostSaveButtonClick() {
-
+    setSaveButtonDisable(true)
     const body = {
       title,
       coverUrl,
@@ -20,10 +20,11 @@ export default function NewStoryPage() {
 
     const request = axios.post("http://localhost:4000/posts", body)
     request.then((res) => {
-      
+      setSaveButtonDisable(false)
     })
     request.catch((err) => {
       alert("Ocorreu um erro inesperado")
+      setSaveButtonDisable(false)
     })
   }
 
