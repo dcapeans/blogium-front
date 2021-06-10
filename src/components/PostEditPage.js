@@ -14,22 +14,37 @@ export default function PostEditPage() {
   const history = useHistory();
 
   useEffect(() => {
-    const post = {
-      id: 1,
-      title: 'Hello World',
-      coverUrl: 'https://miro.medium.com/max/1024/1*OohqW5DGh9CQS4hLY5FXzA.png',
-      contentPreview: 'Esta é a estrutura de um post esperado pelo front-end',
-      content: 'Este é o conteúdo do post, o que realmente vai aparecer na página do post...'
-    };
-
-    setPost(post);
-
-    setTitle(post.title);
-    setCoverUrl(post.coverUrl);
-    setContent(post.content);
+    const request = axios.get(`http://localhost:4000/posts/${postId}`)
+    request.then((res) => {
+      setPost(res.data)
+      setTitle(res.data.title);
+      setCoverUrl(res.data.coverUrl);
+      setContent(res.data.content);
+    })
+    request.catch((err) => {
+      alert("Ocorreu um erro inesperado")
+    })   
   }, [postId]);
 
-  function onPostSaveButtonClick() {}
+  
+
+  function onPostSaveButtonClick() {
+    setSaveButtonDisable(true)
+    const body = {
+      title,
+      coverUrl,
+      content
+    }
+    const request = axios.put(`http://localhost:4000/posts/${postId}`, body)
+    request.then((res) => {
+      setSaveButtonDisable(false)
+      history.push("/")
+    })
+    request.catch((err) => {
+      setSaveButtonDisable(false)
+      alert("Ocorreu um erro inesperado")
+    })
+  }
 
   if (!post || !content) return <Spinner />;
 
@@ -43,6 +58,7 @@ export default function PostEditPage() {
       onContentChange={(newContent) => setContent(newContent)}
       onPostSaveButtonClick={onPostSaveButtonClick}
       postId={postId}
+      isSaveButtonDisabled={isSaveButtonDisabled}
     />
   );
 }

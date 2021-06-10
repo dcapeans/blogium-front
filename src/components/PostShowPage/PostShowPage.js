@@ -15,7 +15,6 @@ export default function PostShowPage() {
   const history = useHistory();
 
   useEffect(() => {
-
     const request = axios.get(`http://localhost:4000/posts/${postId}`)
     request.then((res) => {
       setPost(res.data)
@@ -30,8 +29,14 @@ export default function PostShowPage() {
   }
 
   function onDeleteButtonClick() {
-    alert('No futuro, ao clicar neste botão o post vai ser excluído de verdade :)');
-    history.push('/');
+    const request = axios.delete(`http://localhost:4000/posts/${postId}`)
+    request.then((res) => {
+      alert("Post deletado com sucesso")
+      history.push('/');
+    })
+    request.catch((err) => {
+      alert("Ocorreu um erro inesperado")
+    })    
   }
 
   if (!post) return <Spinner />;
